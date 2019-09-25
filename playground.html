@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+<style>
+    table,
+    th,
+    td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+
+    th,
+    td {
+        padding: 5px;
+    }
+</style>
+
+<body>
+
+    <h2>XMLHttpRequest Object</h2>
+
+    <button type="button" onclick="loadDocument()">Get CD collection</button>
+    <br><br>
+    <table id="demo"></table>
+
+    <script>
+        function loadDocument() {
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState == 4 && this.status == 200) {
+                    populateTable(this);
+                }
+            };
+            xhttp.open("GET", "cd_catalog.xml", true);
+            xhttp.send();
+        }
+
+        function populateTable(xml) {
+            let xmlDoc = xml.responseXML;
+            let table = "<tr><th>Title</th><th>Artist</th><th>Country</th><th>Company</th><th>Price</th><th>Year</th></tr>";
+            let x = xmlDoc.getElementsByTagName("CD");
+            for (let i = 0; i < x.length; i++) {
+                table += "<tr><td>" +
+                    x[i].getElementsByTagName("TITLE")[0].childNodes[0].nodeValue
+                    +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("ARTIST")[0].childNodes[0].nodeValue +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("COUNTRY")[0].childNodes[0].nodeValue
+                    +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("COMPANY")[0].childNodes[0].nodeValue
+                    +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("PRICE")[0].childNodes[0].nodeValue
+                    +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("YEAR")[0].childNodes[0].nodeValue
+                    +
+                    "</td></tr>";
+            }
+            document.getElementById("demo").innerHTML = table;
+        }
+    </script>
